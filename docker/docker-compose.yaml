@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  postgres_rol:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: davidvega
+      POSTGRES_PASSWORD: davidvega!davidvega!
+      POSTGRES_DB: rolmanager
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
