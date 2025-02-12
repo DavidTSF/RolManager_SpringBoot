@@ -1,4 +1,4 @@
-package dev.davidvega.hogwarts.config;
+package dev.davidvega.rolmanager.config;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
