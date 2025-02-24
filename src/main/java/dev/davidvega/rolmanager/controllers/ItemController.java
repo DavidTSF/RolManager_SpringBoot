@@ -4,6 +4,8 @@ import dev.davidvega.rolmanager.dto.requests.ItemRequestDTO;
 import dev.davidvega.rolmanager.dto.responses.CharacterItemResponseDTO;
 import dev.davidvega.rolmanager.dto.responses.ItemsFromCharacterDTO;
 import dev.davidvega.rolmanager.dto.responses.ItemResponseDTO;
+import dev.davidvega.rolmanager.mappers.ItemMapper;
+import dev.davidvega.rolmanager.repositories.ItemRepository;
 import dev.davidvega.rolmanager.services.ItemService;
 import dev.davidvega.rolmanager.utils.ValidationUtil;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,6 +16,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/items")
@@ -22,6 +26,8 @@ public class ItemController {
 
     private final ItemService itemService;
     private final ValidationUtil validationUtil;
+    private final ItemRepository itemRepository;
+    private final ItemMapper itemMapper;
 
     @Operation(summary = "Obtiene un listado de todos los items")
     @GetMapping
@@ -99,6 +105,32 @@ public class ItemController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @Operation(summary = "Devuelve todos los items con mayor valor del especificado")
+    @PreAuthorize("hasAuthority('PLAYER') or hasAuthority('ADMIN')")
+    @GetMapping("/value-greater-than/{minValue}")
+    public ResponseEntity<List<ItemResponseDTO>> getItemsWithValueGreaterThan(@PathVariable int minValue) {
+        List<ItemResponseDTO> items = itemRepository.findItemsWithQuantityGreaterThan(minValue).stream().map(
+                itemMapper::convertToResponseDTO
+        ).toList();
+        return ResponseEntity.ok(items);
+    }
+
+    @Operation(summary = "Devuelve la cantidad de diferentes items por su tipo")
+    @PreAuthorize("hasAuthority('PLAYER') or hasAuthority('ADMIN')")
+    @GetMapping("/count-by-type")
+    public ResponseEntity<Map<String, Long>> getItemCountGroupedByType() {
+        List<Object[]> result = itemRepository.countItemsGroupedByType();
+
+        // Convertir los resultados en un mapa
+        Map<String, Long> itemCountByType = result.stream()
+                .collect(Collectors.toMap(
+                        row -> (String) row[0], // tipo de ítem
+                        row -> (Long) row[1]     // cantidad de ítems
+                ));
+
+        return ResponseEntity.ok(itemCountByType);
     }
 
 }

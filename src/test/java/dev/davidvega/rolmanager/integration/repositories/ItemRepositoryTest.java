@@ -11,7 +11,9 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -74,4 +76,62 @@ public class ItemRepositoryTest {
         Optional<Item> deleted = itemRepository.findById(Long.valueOf(item.getId()));
         assertFalse(deleted.isPresent());
     }
+
+    @Test
+    void testFindItemsWithQuantityGreaterThan() {
+        Item cheapItem = new Item();
+        cheapItem.setName("Wooden Stick");
+        cheapItem.setDescription("A simple stick");
+        cheapItem.setWeight(BigDecimal.valueOf(5));
+        cheapItem.setValue(50);
+        cheapItem.setType("Weapon");
+        itemRepository.save(cheapItem);
+
+        Item expensiveItem = new Item();
+        expensiveItem.setName("Golden Crown");
+        expensiveItem.setDescription("A crown made of gold");
+        expensiveItem.setWeight(BigDecimal.valueOf(10));
+        expensiveItem.setValue(1500);
+        expensiveItem.setType("Accessory");
+        itemRepository.save(expensiveItem);
+
+        List<Item> expensiveItems = itemRepository.findItemsWithQuantityGreaterThan(500);
+
+        assertFalse(expensiveItems.isEmpty());
+        assertEquals(2, expensiveItems.size());
+        assertTrue(expensiveItems.stream().anyMatch(i -> i.getName().equals("Magic Sword")));
+        assertTrue(expensiveItems.stream().anyMatch(i -> i.getName().equals("Golden Crown")));
+    }
+
+    @Test
+    void testCountItemsGroupedByType() {
+        Item accessory = new Item();
+        accessory.setName("Silver Ring");
+        accessory.setDescription("A shiny silver ring");
+        accessory.setWeight(BigDecimal.valueOf(2));
+        accessory.setValue(500);
+        accessory.setType("Accessory");
+        itemRepository.save(accessory);
+
+        Item weapon = new Item();
+        weapon.setName("Iron Axe");
+        weapon.setDescription("A heavy iron axe");
+        weapon.setWeight(BigDecimal.valueOf(30));
+        weapon.setValue(300);
+        weapon.setType("Weapon");
+        itemRepository.save(weapon);
+
+        List<Object[]> result = itemRepository.countItemsGroupedByType();
+
+        Map<String, Long> itemCountByType = result.stream()
+                .collect(Collectors.toMap(
+                        row -> (String) row[0],
+                        row -> (Long) row[1]
+                ));
+
+        assertEquals(2, itemCountByType.get("Weapon"));
+        assertEquals(1, itemCountByType.get("Accessory"));
+    }
+
+
 }
