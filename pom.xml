@@ -10,7 +10,7 @@
     </parent>
     <groupId>dev.davidvega</groupId>
     <artifactId>RolManager</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>RolManager</name>
     <description>RolManager</description>
     <url/>
