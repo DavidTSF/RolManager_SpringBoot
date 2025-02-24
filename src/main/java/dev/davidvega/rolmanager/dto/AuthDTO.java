@@ -1,4 +1,4 @@
-package dev.davidvega.rolmanager.dtos;
+package dev.davidvega.rolmanager.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

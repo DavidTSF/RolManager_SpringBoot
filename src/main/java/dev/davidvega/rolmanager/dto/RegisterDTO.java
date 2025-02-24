@@ -1,4 +1,4 @@
-package dev.davidvega.rolmanager.dtos;
+package dev.davidvega.rolmanager.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

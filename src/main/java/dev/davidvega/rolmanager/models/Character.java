@@ -1,14 +1,9 @@
 package dev.davidvega.rolmanager.models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
 
 @Getter
 @Setter
@@ -16,13 +11,13 @@ import org.hibernate.annotations.ColumnDefault;
 @Table(name = "\"character\"")
 public class Character {
     @Id
-    @ColumnDefault("nextval('character_id_character_seq')")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "character_id_gen")
+    @SequenceGenerator(name = "character_id_gen", sequenceName = "character_id_seq", allocationSize = 1)
     @Column(name = "id_character", nullable = false)
     private Integer id;
 
     @Size(max = 255)
-    @NotNull
-    @Column(name = "name", nullable = false)
+    @Column(name = "name")
     private String name;
 
     @Size(max = 255)
@@ -37,21 +32,54 @@ public class Character {
     @Column(name = "alignment")
     private String alignment;
 
-    @Size(max = 255)
-    @Column(name = "biography")
+    @Column(name = "biography", length = Integer.MAX_VALUE)
     private String biography;
+
+    @Column(name = "backstory", length = Integer.MAX_VALUE)
+    private String backstory;
 
     @Size(max = 255)
     @Column(name = "image_url")
     private String imageUrl;
 
-    @NotNull
-    @Column(name = "is_alive", nullable = false)
-    private Boolean isAlive = false;
+    @Column(name = "hit_points")
+    private Integer hitPoints;
+
+    @Column(name = "max_hit_points")
+    private Integer maxHitPoints;
+
+    @Column(name = "armor_class")
+    private Integer armorClass;
+
+    @Column(name = "initiative_bonus")
+    private Integer initiativeBonus;
+
+    @Column(name = "strength")
+    private Integer strength;
+
+    @Column(name = "dexterity")
+    private Integer dexterity;
+
+    @Column(name = "constitution")
+    private Integer constitution;
+
+    @Column(name = "intelligence")
+    private Integer intelligence;
+
+    @Column(name = "wisdom")
+    private Integer wisdom;
+
+    @Column(name = "charisma")
+    private Integer charisma;
+
+    @Column(name = "wealth")
+    private Integer wealth;
+
+    @Column(name = "is_alive")
+    private Boolean isAlive;
 
     @Size(max = 255)
-    @NotNull
-    @Column(name = "deity", nullable = false)
+    @Column(name = "deity")
     private String deity;
 
 }

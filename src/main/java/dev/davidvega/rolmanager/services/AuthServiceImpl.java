@@ -1,10 +1,11 @@
 package dev.davidvega.rolmanager.services;
 
 
-import dev.davidvega.rolmanager.dtos.AuthDTO;
-import dev.davidvega.rolmanager.dtos.LoginDTO;
-import dev.davidvega.rolmanager.dtos.RegisterDTO;
+import dev.davidvega.rolmanager.dto.AuthDTO;
+import dev.davidvega.rolmanager.dto.LoginDTO;
+import dev.davidvega.rolmanager.dto.RegisterDTO;
 import dev.davidvega.rolmanager.models.User;
+import dev.davidvega.rolmanager.repositories.UserRepository;
 import dev.davidvega.rolmanager.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -31,7 +32,6 @@ public class AuthServiceImpl implements AuthService {
 
             User user = userRepository.findByUsername(login.getUsername())
                     .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-
             String token = jwtUtil.generateToken(user);
             return new AuthDTO(token);
         } catch (BadCredentialsException | UsernameNotFoundException e) {

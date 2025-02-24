@@ -2,38 +2,21 @@ package dev.davidvega.rolmanager.models;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.Setter;
-import org.hibernate.Hibernate;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
-import java.util.Objects;
+import java.io.Serializable;
 
-@Getter
-@Setter
+@Data
 @Embeddable
-public class CharacterAbilityId implements java.io.Serializable {
-    private static final long serialVersionUID = -6432793200763154045L;
-    @NotNull
-    @Column(name = "ability_id", nullable = false)
+@RequiredArgsConstructor
+@AllArgsConstructor
+public class CharacterAbilityId implements Serializable {
+    @Column(name = "ability_id")
     private Integer abilityId;
-
-    @NotNull
-    @Column(name = "character_id", nullable = false)
+    @Column(name = "character_id")
     private Integer characterId;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        CharacterAbilityId entity = (CharacterAbilityId) o;
-        return Objects.equals(this.abilityId, entity.abilityId) &&
-                Objects.equals(this.characterId, entity.characterId);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(abilityId, characterId);
-    }
 
 }
